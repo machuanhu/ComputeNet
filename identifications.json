@@ -1,0 +1,52 @@
+[
+    {
+        "location": "Hangzhou",
+        "industry":"financial",
+        "ownership":"Alipay",
+        "resource_type":"cloud computing",
+        "node_info":"linux server",
+        "chip_info":"13th Gen Intel(R) Core(TM) i5-13490F",
+        "area":"",
+        "other_info":""
+    },
+    {
+        "location": "Beijing",
+        "industry":"internet",
+        "ownership":"ByteDance",
+        "resource_type":"super computing",
+        "node_info":"",
+        "chip_info":"NVIDIA GeForce RTX 4070",
+        "area":"",
+        "other_info":""
+    },
+    {
+        "location": "Shanghai",
+        "industry":"Game",
+        "ownership":"miHoYo",
+        "resource_type":"intelligent computing",
+        "node_info":"",
+        "chip_info":"NVIDIA GeForce RTX 4090",
+        "area":"",
+        "other_info":""
+    },
+    {
+        "location": "Wuhan",
+        "industry":"Communications",
+        "ownership":"Telecom",
+        "resource_type":"cloud computing",
+        "node_info":"",
+        "chip_info":"GPU",
+        "area":"",
+        "other_info":""
+    },
+    {
+        "location": "Shenzhen",
+        "industry":"manufacturing",
+        "ownership":"byd",
+        "resource_type":"intelligent computing",
+        "node_info":"",
+        "chip_info":"NPU",
+        "area":"",
+        "other_info":""
+    }
+]
