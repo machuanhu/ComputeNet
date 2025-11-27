@@ -137,6 +137,7 @@ class ServiceNode:
     def get_gpu_info(self):
         gpu_info = {}
         try:
+            '''
             result = subprocess.run(['nvidia-smi', '--query-gpu=name', '--format=csv,noheader'], capture_output=True, text=True)
             output = result.stdout.strip()
             gpu_models = output.split('\n')
@@ -155,9 +156,16 @@ class ServiceNode:
                     'gpu_usage':usage,
                     'occupied':self.gpu_info and self.gpu_info[i]['occupied'] or False
                 }
+            '''
+            gpu_info[0] = {
+                'gpu_id':0,
+                'gpu_model':"",
+                'gpu_usage':0.1,
+                'occupied':True
+            }
         except:
             print('no gpu!')
-        
+
         return gpu_info
 
     def get_mem_info(self):
@@ -261,18 +269,18 @@ class ServiceNode:
         self.mem_info = mem_info
         self.storage_info = storage_info
 
-        print('name:',self.name)
-        print('gpu_info:',self.gpu_info)
-        print('cpu_info:',self.cpu_info)
-        print('net_info:',self.net_info)
-        print('mem_info:',self.mem_info)
-        print('storage_info:',self.storage_info)
+        #print('name:',self.name)
+        #print('gpu_info:',self.gpu_info)
+        #print('cpu_info:',self.cpu_info)
+        #print('net_info:',self.net_info)
+        #print('mem_info:',self.mem_info)
+        #print('storage_info:',self.storage_info)
 
         busyness = (0 if self.gpu_info == {} else self.gpu_info['0']['gpu_usage'])*0.3 + self.cpu_info['cpu_usage']*0.3 + self.net_info['net_usage']*0.1 + self.mem_info['mem_usage']*0.2 + self.storage_info['storage_usage']*0.1
-        print('busyness:',busyness)
+        #print('busyness:',busyness)
 
         dynamic_score = self.overall_score * (1-busyness/100)
-        print('dynamic_score:',dynamic_score)
+        #print('dynamic_score:',dynamic_score)
         
         self.busyness = busyness
         self.dynamic_score = dynamic_score

@@ -25,7 +25,8 @@ class Scheduler:
         idt_list = get_identifications()
         mapper = Mapper()
         node_list = []
-
+        task_count=1
+        sorted_index = 0
         for i,idt in enumerate(idt_list):
             print(f'identity{i+1}')
             idt.show_attributes()
@@ -51,24 +52,29 @@ class Scheduler:
             print('!!!!!!!!!!!',task)
             task_send_ok = False
             while not task_send_ok:
-                for node in node_list:
-                    json_data = {
-                            'src_ip': self.ip,
-                            'dst_ip': node.address,
-                            'method': 'dynamic_evaluate',
-                            'params': {}
-                            }
-                    response = requests.post(f'http://{self.ns3_address}/rpc_call', json=json_data)
-                    result = response.json().get('result')
-                    node.sn.update_dynamic_indicators(**result)
+                if task_count % 100 == 1:
+                    for node in node_list:
+                        json_data = {
+                                'src_ip': self.ip,
+                                'dst_ip': node.address,
+                                'method': 'dynamic_evaluate',
+                                'params': {}
+                                }
+                        response = requests.post(f'http://{self.ns3_address}/rpc_call', json=json_data)
+                        result = response.json().get('result')
+                        print(result)
+                        node.sn.update_dynamic_indicators(**result)
+                        sorted_index=0
 
-
-                selected_node = select_node(node_list,task,evaluator)
+                selected_node_list = select_node(node_list,task,evaluator)
+                selected_node = selected_node_list[sorted_index%len(selected_node_list)]
                 if selected_node is not None:
+                    task_count+=1
+                    sorted_index+=1
                     send_task_to_node(selected_node,task,self.ip,self.ns3_address,self.running_tasks)
                     task_send_ok = True
                 
-                time.sleep(5)
+                #time.sleep(5)
 
     def add_task(self,task):
         task['task_id'] = self.task_counter
@@ -104,15 +110,14 @@ def select_node(node_list,task,evaluator):
     
     available_node_list = []
     if task['task_info']['chip_info'] == 'CPU':
-        available_node_list = [node for node in node_list if not node.using_cpu]
+        available_node_list = [node for node in node_list]
     elif task['task_info']['chip_info'] == 'GPU':
-        available_node_list = [node for node in node_list if not (node.using_gpu or node.sn.gpu_info == {})]
-    
+        available_node_list = [node for node in node_list]
     if len(available_node_list) <= 0:
         return None
     else:
         sorted_list = sorted(available_node_list, key=lambda node: dynamic_scores[node_list.index(node)], reverse=True)
-        return sorted_list[0]
+        return sorted_list
 
 def send_task_to_node(node,task,src_ip,ns3_address,running_tasks):
     unique_id = uuid.uuid4()

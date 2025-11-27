@@ -20,7 +20,10 @@ def handle_task(task):
 
 def handle_common_task(task):
     start_time = time.time()
-    output = common_task1()
+    if task['task_info']['chip_info'] == 'GPU':
+        output = common_task1()
+    else:
+        output = common_task2()
     end_time = time.time()
     duration = end_time - start_time
 
@@ -29,6 +32,7 @@ def handle_common_task(task):
         'task_start_time': start_time,
         'task_end_time': end_time,
         'task_duration': duration,
+        'task_type' : "common_task",
         'result': output
     }
 
@@ -46,6 +50,7 @@ def handle_trainning_task(task):
         'task_start_time': start_time,
         'task_end_time': end_time,
         'task_duration': duration,
+        'task_type' : "train_task",
         'result': 'trained_model'
         }
     return done_task
@@ -64,6 +69,7 @@ def handle_inferencing_task(task):
         'task_start_time': start_time,
         'task_end_time': end_time,
         'task_duration': duration,
+        'task_type' : "inference_task",
         'result': output
     }
 
@@ -73,6 +79,23 @@ def handle_inferencing_task(task):
 
 def common_task1():
     # 定义矩阵的大小
+    matrix_size = 1000
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    # 生成两个随机矩阵
+    a = torch.rand(matrix_size, matrix_size, device=device)
+    b = torch.rand(matrix_size, matrix_size, device=device)
+
+    # 执行矩阵相乘并计算时间
+    start_time = time.time()
+    torch.mm(a, b)
+    end_time = time.time()
+
+    # 计算运行时间
+    execution_time = end_time - start_time
+    print(f"Matrix multiplication of size {matrix_size}x{matrix_size} took {execution_time} seconds")
+
+def common_task2():
+        # 定义矩阵的大小
     matrix_size = 1000
 
     # 生成两个随机矩阵
@@ -88,19 +111,39 @@ def common_task1():
     execution_time = end_time - start_time
     print(f"Matrix multiplication of size {matrix_size}x{matrix_size} took {execution_time} seconds")
 
-    def common_task2():
-        pass
-
 ################################################################################
 
 def inference(content,model='llama3.1'):
-    response = ollama.chat(model=model, messages=[
-    {
-        'role': 'user',
-        'content': content,
-    },
-    ])
-    return response['message']['content']
+    device_ = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = MnistNet().to(device_)
+    dummy_input = torch.randn(64, 1, 28, 28, device=device_)
+    model.eval()
+    with torch.no_grad():
+        for _ in range(5):
+            _ = model(dummy_input)
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+    if torch.cuda.is_available():
+        start_event = torch.cuda.Event(enable_timing=True)
+        end_event = torch.cuda.Event(enable_timing=True)
+        torch.cuda.synchronize()
+        start_event.record()
+        with torch.no_grad():
+            for _ in range(100):
+                _ = model(dummy_input)
+        end_event.record()
+        torch.cuda.synchronize()
+        elapsed_ms = start_event.elapsed_time(end_event) / 1000
+        avg_time = elapsed_ms / 100
+    else:
+        start = time.perf_counter()
+        with torch.no_grad():
+            for _ in range(100):
+                _ = model(dummy_input)
+        avg_time = (time.perf_counter() - start) / 100
+    del model, dummy_input
+    torch.cuda.empty_cache()
+    return f"inference_completed in {avg_time:.4f}s (avg of 100 runs)"
 
 ################################################################################
 

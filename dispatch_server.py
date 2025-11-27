@@ -31,11 +31,16 @@ def task_completed():
 
     done_task_log = {}
     done_task_log['task_id'] = task['task_id']
+    done_task_log['task_type'] = done_task['task_type']
+    done_task_log['taker_ip'] = caller_ip
+    done_task_log['task_duration'] = round(done_task['task_duration'], 2)
     done_task_log['task_submission_time'] = task['task_submission_time']
     done_task_log['task_completion_time'] = time.time()
-    done_task_log['task_duration'] = done_task['task_duration']
-    done_task_log['taker_ip'] = caller_ip
-    done_task_log['result'] = done_task['result']
+
+    # 格式化为字符串
+    done_task_log['task_submission_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(done_task_log['task_submission_time']))
+    done_task_log['task_completion_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(done_task_log['task_completion_time']))
+
     with open("done_task_log.txt", 'a', encoding='utf-8') as file_object:
         file_object.write(json.dumps(done_task_log,ensure_ascii=False)+'\n')
     
@@ -62,6 +67,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ns3_address', default='192.168.124.101:60001', type=str, help='ns3_address')
     args = parser.parse_args()
-    scheduler = Scheduler(ns3_address=args.ns3_address)
+    scheduler = Scheduler(ip='192.168.124.101',ns3_address=args.ns3_address)
     scheduler.run()
     app.run(host='0.0.0.0', port=60002)

@@ -3,6 +3,7 @@ import random
 
 if __name__ == '__main__':
     task_list = []
+    '''
     task_list.append({
         'task_info':{
             'task_type':'inferencing_task',
@@ -49,6 +50,7 @@ if __name__ == '__main__':
             'optimizer': 'Adam'
         },
     })
+    '''
     task_list.append({
         'task_info':{
             'task_type':'trainning_task',
@@ -60,16 +62,24 @@ if __name__ == '__main__':
             'optimizer': 'Adam',
         },
     })
-
+    
     task_list.append({
         'task_info':{
             'task_type':'common_task',
-            'chip_info': 'CPU',
-            'gpu_num':0,
+            'chip_info': 'GPU',
+            'gpu_num':1,
         },
     })
-
-    selected_tasks = random.choices(task_list, k=20)
+    task_list.append({
+        'task_info':{
+            'task_type':'inferencing_task',
+            'chip_info': 'GPU',
+            'gpu_num':1,
+            'content': '华为手机和小米手机哪个更好？'
+        },
+    })
+    weights = [0.05, 0.5, 0.45]
+    selected_tasks = random.choices(task_list,weights=weights, k=9)
     print(selected_tasks)
     for task in selected_tasks:
         json_data = {
