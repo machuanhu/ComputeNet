@@ -85,5 +85,5 @@ if __name__ == '__main__':
         json_data = {
             'task':task
             }
-        response = requests.post(f'http://127.0.0.1:60002/submit_task', json=json_data)
+        response = requests.post(f'http://127.0.0.1:60003/submit_task', json=json_data)
         result = response.json().get('result')

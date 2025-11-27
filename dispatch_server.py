@@ -65,8 +65,8 @@ def test():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ns3_address', default='192.168.124.101:60001', type=str, help='ns3_address')
+    parser.add_argument('--ns3_address', default='192.168.192.158:60001', type=str, help='ns3_address')
     args = parser.parse_args()
-    scheduler = Scheduler(ip='192.168.124.101',ns3_address=args.ns3_address)
+    scheduler = Scheduler(ip='192.168.192.158',ns3_address=args.ns3_address)
     scheduler.run()
-    app.run(host='0.0.0.0', port=60002)
+    app.run(host='0.0.0.0', port=60003)

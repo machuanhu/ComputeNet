@@ -24,14 +24,17 @@ def rpc_call():
         'method' : method,
         'params' : params,
     }
-    self_ip="192.168.124.101"
+    self_ip="192.168.192.158"
     print(f'src_ip:{src_ip},dst_ip:{dst_ip},method:{method}')
     if dst_ip != self_ip:
         net_simulation(src_ip,dst_ip,body)
 
     params['caller_ip'] = src_ip
     try:
-        response = requests.post(f'http://{dst_ip}:60002/{method}', json=params, timeout=5)
+        if method=="task_completed" and dst_ip == self_ip:
+            response = requests.post(f'http://{dst_ip}:60003/{method}', json=params, timeout=5)
+        else:
+            response = requests.post(f'http://{dst_ip}:60002/{method}', json=params, timeout=5)
     except Exception as e:
         print('Error forwarding:', e)
     

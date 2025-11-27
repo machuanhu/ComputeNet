@@ -84,10 +84,9 @@ def init(id):
     sn_list.append(sn_4090)
     sn_list.append(sn_tyy)
     sn_list.append(sn_NPU)
+    ip_list = ['192.168.192.175','192.168.192.225','192.168.192.158']
 
-    ip = get_local_ip()
-
-    return sn_list[id],ip
+    return sn_list[id],ip_list[id]
 
 def run_task(task):
     done_task = task_handler.handle_task(task)
@@ -164,7 +163,7 @@ def test():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--id', default=0, type=int, help='id')
-    parser.add_argument('--ns3_address', default='192.168.124.101:60001', type=str, help='ns3_address')
+    parser.add_argument('--ns3_address', default='192.168.192.158:60001', type=str, help='ns3_address')
     args = parser.parse_args()
     ns3_address = args.ns3_address
     sn,ip = init(args.id)

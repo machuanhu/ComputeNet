@@ -35,9 +35,9 @@ class Mapper:
 def generate_mapping():
     idt_list = get_identifications()
     idt_to_address = {}
-    idt_to_address[get_hash(idt_list[0].to_string())] = '192.168.124.102'
-    idt_to_address[get_hash(idt_list[1].to_string())] = '192.168.124.103'
-    idt_to_address[get_hash(idt_list[2].to_string())] = '192.168.124.104'
+    idt_to_address[get_hash(idt_list[0].to_string())] = '192.168.192.175'
+    idt_to_address[get_hash(idt_list[1].to_string())] = '192.168.192.225'
+    idt_to_address[get_hash(idt_list[2].to_string())] = '192.168.192.158'
     print(idt_to_address)
 
     hash_file_path = "address_mapping.json"

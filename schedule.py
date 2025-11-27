@@ -146,6 +146,6 @@ def send_task_to_node(node,task,src_ip,ns3_address,running_tasks):
     running_tasks[uuid_str] = [task,node,using_chip]
 
 if __name__ == '__main__':
-    ns3_address = '192.168.124.101:60001'
+    ns3_address = '192.168.192.158:60001'
     scheduler = Scheduler(ns3_address)
     scheduler.run()

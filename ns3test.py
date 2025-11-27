@@ -55,10 +55,10 @@ class Ns3Runner:
         self.send_callback = self.send_packet
         self.recv_callback = self.receive_packet
         self.ip_mapping = {
-            '192.168.124.101':(0,'10.1.1.1'),
-            '192.168.124.102':(1,'10.1.2.1'),
-            '192.168.124.103':(2,'10.1.2.2'),
-            '192.168.124.104':(3,'10.1.2.3'),
+            '192.168.192.158':(0,'10.1.1.1'),
+            '192.168.192.175':(1,'10.1.2.1'),
+            '192.168.192.225':(2,'10.1.2.2'),
+            '192.168.192.225':(3,'10.1.2.3'),
             }
         
         self.work_manager = WorkManager()
@@ -167,4 +167,4 @@ if __name__ == '__main__':
     ns3_runner.run()
 
     for i in range(2,4):
-        ns3_runner.add_request('192.168.124.101',f'192.168.124.10{i}',{'data':'xxxx'})
+        ns3_runner.add_request('192.168.192.158',f'192.168.124.10{i}',{'data':'xxxx'})

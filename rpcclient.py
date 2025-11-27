@@ -5,9 +5,9 @@ import resources
 import json
 import pickle
 
-ns3_address = '192.168.124.101:60001'
-src_ip = '192.168.124.101'
-dst_ip = '192.168.124.102'
+ns3_address = '192.168.192.158:60001'
+src_ip = '192.168.192.158'
+dst_ip = '192.168.192.175'
 data = 'what can I say'
 
 json_data = {
