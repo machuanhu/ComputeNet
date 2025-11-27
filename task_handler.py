@@ -7,7 +7,6 @@ import torchvision.transforms as transforms
 from torchvision.models import resnet18
 import torch.nn.functional as F
 import numpy as np
-import ollama
 import time
 
 def handle_task(task):
