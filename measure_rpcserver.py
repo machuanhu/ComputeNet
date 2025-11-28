@@ -27,26 +27,27 @@ device_ = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def init(id):
     sn_list = []
-    sn_BIV100 = resources.ServiceNode("Iluvatar BI-V100",
-                                [2000.85,212.64,1416797],   #整数运算速率，浮点运算速率，哈希运算速率
-                                [100],  ##带宽Mb/s
-                                [1024,11790.8], #内存容量GB,内存带宽MB/s
-                                [12480,21.8,5312]   #存储容量GB,存储带宽MB/s,每秒读写次数ops/s
-                                )
     
     sn_N260 = resources.ServiceNode("MetaX N260",
-                                [1995.96,358.68,2402351],
+                                [3991.92,358.68,2402351],
                                 [100],
-                                [384,16131.5],
+                                [65536,16131.5],
                                 [17280,466,124700]
                                 )
     
     sn_K100 = resources.ServiceNode("K100_AI",
-                                [28066.47,675.32,1735655],
-                                [200],
-                                [125,17208.4],
-                                [8400,491.9,139700]
+                                [2000.85,212.64,1416797],   #整数运算速率，浮点运算速率，哈希运算速率
+                                [100],  ##带宽Mb/s
+                                [65536,11790.8], #内存容量GB,内存带宽MB/s
+                                [17280,466,124700]   #存储容量GB,存储带宽MB/s,每秒读写次数ops/s
                                 )
+    sn_BIV100 = resources.ServiceNode("Iluvatar BI-V100",       
+                                [28066.47,675.32,1735655],
+                                [100],
+                                [32768,17208.4],
+                                [17280,466,124700]     
+                                )
+    
     sn_MLU = resources.ServiceNode("MLU",
                                 [2000.85,212.64,1416797],   #整数运算速率，浮点运算速率，哈希运算速率
                                 [100],  ##带宽Mb/s
@@ -79,10 +80,9 @@ def init(id):
                                 [11,11000],
                                 [256,30,10000]
                                 )
-
-    sn_list.append(sn_BIV100)
     sn_list.append(sn_N260)
     sn_list.append(sn_K100)
+    sn_list.append(sn_BIV100)
     sn_list.append(sn_MLU)
     sn_list.append(sn_GCU)
     sn_list.append(sn_4090)

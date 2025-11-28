@@ -1,56 +1,78 @@
 import requests
 import random
+import time
+import json
+import threading
+import os
+
+# 记录脚本启动时间
+start_time = None
+
+def read_done_task_log():
+    """读取已完成任务日志并统计各类型任务数量"""
+    common_task_count = 0
+    inferencing_task_count = 0
+    training_task_count = 0
+    
+    log_file = "done_task_log.txt"
+    if not os.path.exists(log_file):
+        return common_task_count, inferencing_task_count, training_task_count
+    
+    try:
+        with open(log_file, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    log_entry = json.loads(line)
+                    result = log_entry.get('task_type', '')
+                    
+                    # 根据result字段推断任务类型
+                    # training_task的result是'trained_model'
+                    if result == 'train_task':
+                        training_task_count += 1
+                    # inferencing_task的result包含'inference_completed'
+                    elif isinstance(result, str) and 'inference_task' in result:
+                        inferencing_task_count += 1
+                    # 其他情况默认为common_task
+                    else:
+                        common_task_count += 1
+                except json.JSONDecodeError:
+                    continue
+    except Exception as e:
+        print(f"读取日志文件出错: {e}")
+    
+    return common_task_count, inferencing_task_count, training_task_count
+
+def print_task_stats():
+    """每隔5秒输出任务统计信息"""
+    while True:
+        time.sleep(5)
+        common_count, inference_count, training_count = read_done_task_log()
+        total_count = common_count + inference_count + training_count
+        
+        # 计算运行时间
+        elapsed_time = time.time() - start_time
+        hours = int(elapsed_time // 3600)
+        minutes = int((elapsed_time % 3600) // 60)
+        seconds = int(elapsed_time % 60)
+        
+        print(f"\n[任务统计] 运行时间: {hours:02d}:{minutes:02d}:{seconds:02d} | 已完成任务:")
+        print(f"  common_task: {common_count}个")
+        print(f"  inferencing_task: {inference_count}个")
+        print(f"  training_task: {training_count}个")
+        print(f"  任务总数: {total_count}个")
 
 if __name__ == '__main__':
+    # 记录脚本启动时间
+    start_time = time.time()
+    
+    # 启动统计输出线程
+    stats_thread = threading.Thread(target=print_task_stats, daemon=True)
+    stats_thread.start()
+    
     task_list = []
-    '''
-    task_list.append({
-        'task_info':{
-            'task_type':'inferencing_task',
-            'chip_info': 'GPU',
-            'gpu_num':1,
-            'content': '天空为什么是蓝色的？'
-        },
-    })
-    task_list.append({
-        'task_info':{
-            'task_type':'inferencing_task',
-            'chip_info': 'GPU',
-            'gpu_num':1,
-            'content': '华为手机和小米手机哪个更好？'
-        },
-    })
-    task_list.append({
-        'task_info':{
-            'task_type':'inferencing_task',
-            'chip_info': 'GPU',
-            'gpu_num':1,
-            'content': '火车径直前行会压死五个被绑在铁轨上的人，但拉下拉杆会变道压死另一个人，你会怎么做？'
-        },
-    })
-    # task_list.append({
-    #     'task_info':{
-    #         'task_type':'trainning_task',
-    #         'chip_info': 'GPU',
-    #         'gpu_num':1,
-    #         'dataset': 'Mnist',
-    #         'model': 'resnet18',
-    #         'loss_func': 'trainning_task',
-    #         'optimizer': 'Adam'
-    #     },
-    # })
-    task_list.append({
-        'task_info':{
-            'task_type':'trainning_task',
-            'chip_info': 'CPU',
-            'gpu_num':0,
-            'dataset': 'Mnist',
-            'model': 'resnet18',
-            'loss_func': 'CrossEntropyLoss',
-            'optimizer': 'Adam'
-        },
-    })
-    '''
     task_list.append({
         'task_info':{
             'task_type':'trainning_task',
@@ -79,11 +101,18 @@ if __name__ == '__main__':
         },
     })
     weights = [0.05, 0.5, 0.45]
-    selected_tasks = random.choices(task_list,weights=weights, k=9)
+    selected_tasks = random.choices(task_list,weights=weights, k=1000)
     print(selected_tasks)
     for task in selected_tasks:
         json_data = {
             'task':task
             }
-        response = requests.post(f'http://127.0.0.1:60003/submit_task', json=json_data)
+        response = requests.post(f'http://127.0.0.1:60003/submit_task', json=json_data,timeout=600)
         result = response.json().get('result')
+    
+    # 保持主线程运行，以便统计线程可以持续输出
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("\n程序退出")

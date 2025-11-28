@@ -121,7 +121,7 @@ def inference(content,model='llama3.1'):
     dummy_input = torch.randn(64, 1, 28, 28, device=device_)
     model.eval()
     with torch.no_grad():
-        for _ in range(5):
+        for _ in range(2):
             _ = model(dummy_input)
         if torch.cuda.is_available():
             torch.cuda.synchronize()
@@ -131,18 +131,18 @@ def inference(content,model='llama3.1'):
         torch.cuda.synchronize()
         start_event.record()
         with torch.no_grad():
-            for _ in range(100):
+            for _ in range(2):
                 _ = model(dummy_input)
         end_event.record()
         torch.cuda.synchronize()
         elapsed_ms = start_event.elapsed_time(end_event) / 1000
-        avg_time = elapsed_ms / 100
+        avg_time = elapsed_ms / 2
     else:
         start = time.perf_counter()
         with torch.no_grad():
             for _ in range(100):
                 _ = model(dummy_input)
-        avg_time = (time.perf_counter() - start) / 100
+        avg_time = (time.perf_counter() - start) / 2
     del model, dummy_input
     torch.cuda.empty_cache()
     return f"inference_completed in {avg_time:.4f}s (avg of 100 runs)"
@@ -187,11 +187,11 @@ def mnist_task(gpu_num):
     ])
     train_dataset = MNIST(root='./data', train=True, download=True, transform=transform)
         
-    train_loader = DataLoader(train_dataset, batch_size=64,drop_last=True,shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=16,drop_last=True,shuffle=True)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters())
     
-    for epoch in range(5):
+    for epoch in range(1):
         for batch_idx, (data, target) in enumerate(train_loader):
             data, target = data.to(device), target.to(device)
 
@@ -216,11 +216,11 @@ def cifar_task(gpu_num):
     ])
     train_dataset = CIFAR10(root='./data/cifar10', train=True, download=True, transform=transform)
         
-    train_loader = DataLoader(train_dataset, batch_size=64,drop_last=True,shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=16,drop_last=True,shuffle=True)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters())
     
-    for epoch in range(5):
+    for epoch in range(1):
         for batch_idx, (data, target) in enumerate(train_loader):
             data, target = data.to(device), target.to(device)
 

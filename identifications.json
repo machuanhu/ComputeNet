@@ -1,31 +1,31 @@
 [
     {
-        "location": "WuHan",
+        "location": "HuaNan",
         "industry":"internet",
-        "ownership":"XiaoMi",
+        "ownership":"PengCheng",
         "resource_type":"super computing",
         "node_info":"",
-        "chip_info":"NVIDIA GeForce RTX 4070",
+        "chip_info":"MetaX N260",
         "area":"",
         "other_info":""
     },
     {
-        "location": "Beijing",
+        "location": "HuaNan",
         "industry":"internet",
-        "ownership":"ByteDance",
+        "ownership":"PengCheng",
         "resource_type":"super computing",
         "node_info":"",
-        "chip_info":"NVIDIA GeForce RTX 4070",
+        "chip_info":"K100_AI",
         "area":"",
         "other_info":""
     },
     {
-        "location": "ShangHai",
+        "location": "HuaNan",
         "industry":"internet",
-        "ownership":"ByteDance",
+        "ownership":"PengCheng",
         "resource_type":"super computing",
         "node_info":"",
-        "chip_info":"NVIDIA GeForce RTX 4070",
+        "chip_info":"Iluvatar BI-V100",
         "area":"",
         "other_info":""
     }
