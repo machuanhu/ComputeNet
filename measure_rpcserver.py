@@ -110,7 +110,7 @@ def run_task(task,ip,ns3_address):
     result = response.json().get('result')
 
 def start_task(task):
-    process = mp.Process(target=run_task,args=(task,))
+    process = mp.Process(target=run_task,args=(task,ip,ns3_address))
     process.start()
 
 @app.route('/req_sn', methods=['POST'])
