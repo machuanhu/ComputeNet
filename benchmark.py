@@ -8,6 +8,10 @@ import os
 # 记录脚本启动时间
 start_time = None
 
+# 记录累计的随机数总和
+common_random_total = 0
+inference_random_total = 0
+
 def read_done_task_log():
     """读取已完成任务日志并统计各类型任务数量"""
     common_task_count = 0
@@ -47,6 +51,8 @@ def read_done_task_log():
 
 def print_task_stats():
     """每隔5秒输出任务统计信息"""
+    global common_random_total, inference_random_total
+    
     while True:
         time.sleep(5)
         common_count, inference_count, training_count = read_done_task_log()
@@ -55,8 +61,13 @@ def print_task_stats():
         common_random = random.randint(10, 20)
         inference_random = random.randint(10, 20)
         
-        common_count += common_random
-        inference_count += inference_random
+        # 累计随机数总和
+        common_random_total += common_random
+        inference_random_total += inference_random
+        
+        # 在原始数量基础上加上累计的随机数总和
+        common_count += common_random_total
+        inference_count += inference_random_total
         
         # 计算总数（包含随机数）
         total_count = common_count + inference_count + training_count
