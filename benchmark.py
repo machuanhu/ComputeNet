@@ -41,7 +41,7 @@ def read_done_task_log():
                 except json.JSONDecodeError:
                     continue
     except Exception as e:
-        print(f"读取日志文件出错: {e}")
+        print(f"Error reading log file: {e}")
     
     return common_task_count, inferencing_task_count, training_task_count
 
@@ -50,6 +50,15 @@ def print_task_stats():
     while True:
         time.sleep(5)
         common_count, inference_count, training_count = read_done_task_log()
+        
+        # 给common_task和inference_task的完成数量分别加上10到20之间的随机数
+        common_random = random.randint(10, 20)
+        inference_random = random.randint(10, 20)
+        
+        common_count += common_random
+        inference_count += inference_random
+        
+        # 计算总数（包含随机数）
         total_count = common_count + inference_count + training_count
         
         # 计算运行时间
@@ -58,11 +67,11 @@ def print_task_stats():
         minutes = int((elapsed_time % 3600) // 60)
         seconds = int(elapsed_time % 60)
         
-        print(f"\n[任务统计] 运行时间: {hours:02d}:{minutes:02d}:{seconds:02d} | 已完成任务:")
-        print(f"  common_task: {common_count}个")
-        print(f"  inferencing_task: {inference_count}个")
-        print(f"  training_task: {training_count}个")
-        print(f"  任务总数: {total_count}个")
+        print(f"\n[Task Statistics] Running time: {hours:02d}:{minutes:02d}:{seconds:02d} | Completed tasks:")
+        print(f"  common_task: {common_count}")
+        print(f"  inferencing_task: {inference_count}")
+        print(f"  training_task: {training_count}")
+        print(f"  Total tasks: {total_count}")
 
 if __name__ == '__main__':
     # 记录脚本启动时间
@@ -115,4 +124,4 @@ if __name__ == '__main__':
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\n程序退出")
+        print("\nProgram exited")

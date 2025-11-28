@@ -32,9 +32,9 @@ def rpc_call():
     params['caller_ip'] = src_ip
     try:
         if method=="task_completed" and dst_ip == self_ip:
-            response = requests.post(f'http://{dst_ip}:60003/{method}', json=params, timeout=5)
+            response = requests.post(f'http://{dst_ip}:60003/{method}', json=params, timeout=600)
         else:
-            response = requests.post(f'http://{dst_ip}:60002/{method}', json=params, timeout=5)
+            response = requests.post(f'http://{dst_ip}:60002/{method}', json=params, timeout=600)
     except Exception as e:
         print('Error forwarding:', e)
     

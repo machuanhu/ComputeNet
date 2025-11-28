@@ -1,10 +1,10 @@
 chip,task_type,time
-MetaX N260,common_task,0.64
-MetaX N260,inference_task,7.04
-MetaX N260,train_task,1
-K100_AI,common_task,2
-K100_AI,inference_task,3
-K100_AI,train_task,4
-Iluvatar BI-V100,common_task,5
-Iluvatar BI-V100,inference_task,6
-Iluvatar BI-V100,train_task,7
+MetaX N260,common_task,0.61
+MetaX N260,inference_task,6.67
+MetaX N260,train_task,24.75
+K100_AI,common_task,4.46
+K100_AI,inference_task,5.53
+K100_AI,train_task,30.83
+Iluvatar BI-V100,common_task,0.04
+Iluvatar BI-V100,inference_task,0.18
+Iluvatar BI-V100,train_task,15.34
