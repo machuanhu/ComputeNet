@@ -8,6 +8,11 @@ from torchvision.models import resnet18
 import torch.nn.functional as F
 import numpy as np
 import time
+import measure_rpcserver
+device=measure_rpcserver.device
+device_=measure_rpcserver.device_
+
+
 
 def handle_task(task):
     if task['task_info']['task_type'] == 'common_task':
@@ -79,7 +84,6 @@ def handle_inferencing_task(task):
 def common_task1():
     # 定义矩阵的大小
     matrix_size = 1000
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     # 生成两个随机矩阵
     a = torch.rand(matrix_size, matrix_size, device=device)
     b = torch.rand(matrix_size, matrix_size, device=device)
@@ -113,7 +117,6 @@ def common_task2():
 ################################################################################
 
 def inference(content,model='llama3.1'):
-    device_ = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = MnistNet().to(device_)
     dummy_input = torch.randn(64, 1, 28, 28, device=device_)
     model.eval()
@@ -176,7 +179,6 @@ class CifarNet(nn.Module):
 
 def mnist_task(gpu_num):
     use_gpu = True if gpu_num >= 1 else False
-    device = torch.device('cuda:0' if use_gpu else 'cpu')
     
     model = MnistNet().to(device)
     transform = transforms.Compose([
@@ -205,7 +207,6 @@ def mnist_task(gpu_num):
 
 def cifar_task(gpu_num):
     use_gpu = True if gpu_num >= 1 else False
-    device = torch.device('cuda:0' if use_gpu else 'cpu')
     
     model = CifarNet(3).to(device)
     transform = transforms.Compose([

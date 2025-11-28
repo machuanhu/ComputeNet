@@ -7,6 +7,7 @@ import time
 import requests
 import socket
 import task_handler
+import torch
 
 from flask import Flask, request, jsonify
 
@@ -20,6 +21,9 @@ def get_local_ip():
     finally:
         s.close()
     return ip
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device_ = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def init(id):
     sn_list = []
@@ -88,7 +92,7 @@ def init(id):
 
     return sn_list[id],ip_list[id]
 
-def run_task(task):
+def run_task(task,ip,ns3_address):
     done_task = task_handler.handle_task(task)
     
     caller_ip = task['caller_ip']
@@ -161,6 +165,7 @@ def test():
     return jsonify(response)
 
 if __name__ == '__main__':
+    mp.set_start_method('spawn')
     parser = argparse.ArgumentParser()
     parser.add_argument('--id', default=0, type=int, help='id')
     parser.add_argument('--ns3_address', default='192.168.192.158:60001', type=str, help='ns3_address')
